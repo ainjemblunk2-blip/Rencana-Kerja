@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProWork - Dashboard Produktivitas Premium</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Excel & PDF CDN Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar styling for slick look */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-300">
+
+    <!-- Header Section -->
+    <header class="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Logo / Brand -->
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-brand-500/20">
+                    P
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-brand-500 to-indigo-400 bg-clip-text text-transparent">ProWork</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Ruang Kerja Digital Anda</p>
+                </div>
+            </div>
+
+            <!-- Header Controls -->
+            <div class="flex items-center space-x-3">
+                <!-- Export Report Button (Header) -->
+                <button id="open-export-btn" class="flex items-center space-x-2 text-xs bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl font-semibold shadow-md shadow-emerald-500/10 transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>Ekspor Data</span>
+                </button>
+
+                <!-- Dark Mode Toggle -->
+                <button id="dark-mode-toggle" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-slate-600 dark:text-slate-300" aria-label="Toggle Dark Mode">
+                    <!-- Sun Icon (shown in dark mode) -->
+                    <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M14 12a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <!-- Moon Icon (shown in light mode) -->
+                    <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- LEFT COLUMN: TIME & AGENDA -->
+            <div class="lg:col-span-4 space-y-6">
+                <!-- Premium Live Clock Widget -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden relative group">
+                    <div class="absolute -right-8 -top-8 w-24 h-24 bg-brand-500/10 rounded-full blur-xl group-hover:bg-brand-500/20 transition-all duration-500"></div>
+                    
+                    <div class="flex items-start justify-between relative z-10">
+                        <div>
+                            <span id="current-day" class="text-xs font-semibold uppercase tracking-wider text-brand-500 dark:text-brand-400">Sabtu</span>
+                            <h2 id="current-date" class="text-xl font-bold mt-1 text-slate-800 dark:text-white">18 Juli 2026</h2>
+                        </div>
+                        <div class="p-2 bg-brand-50 dark:bg-brand-950/50 rounded-xl">
+                            <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <!-- Digital Clock -->
+                    <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-baseline space-x-1">
+                        <span id="live-time" class="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-brand-500 to-indigo-500 dark:from-brand-400 dark:to-indigo-300 bg-clip-text text-transparent">14:44</span>
+                        <span id="live-seconds" class="text-lg font-medium text-slate-400">:00</span>
+                    </div>
+                </div>
+
+                <!-- Interactive Agenda -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col min-h-[440px]">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="p-1.5 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-500 rounded-lg">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </span>
+                            <h3 class="font-bold text-lg">Agenda Kerja</h3>
+                        </div>
+                        <button id="add-agenda-btn" class="text-xs bg-brand-500 hover:bg-brand-600 text-white px-2.5 py-1.5 rounded-lg font-medium transition-colors flex items-center space-x-1">
+                            <span>+ Acara</span>
+                        </button>
+                    </div>
+
+                    <!-- Agenda Event List -->
+                    <div id="agenda-list" class="space-y-3 overflow-y-auto flex-1 max-h-[300px] pr-1">
+                        <!-- Agenda items dynamically inserted here -->
+                    </div>
+
+                    <!-- Custom Mini Form to Add Agenda -->
+                    <div id="agenda-form-container" class="hidden mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <div class="space-y-3">
+                            <input type="text" id="agenda-title" placeholder="Nama acara..." class="w-full text-sm bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/80 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white">
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="time" id="agenda-time" class="text-sm bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/80 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white">
+                                <input type="date" id="agenda-date" class="text-sm bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/80 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="text-xs text-slate-400 mb-1 block">Warna Label</label>
+                                <select id="agenda-color" class="w-full text-sm bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/80 rounded-lg px-2 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white">
+                                    <option value="indigo">Indigo (Rapat/Utama)</option>
+                                    <option value="emerald">Hijau (Santai/Istirahat)</option>
+                                    <option value="amber">Kuning (Sesi Belajar)</option>
+                                    <option value="rose">Merah (Mendesak/Deadline)</option>
+                                </select>
+                            </div>
+                            <div class="flex justify-end space-x-2 pt-1">
+                                <button id="cancel-agenda-btn" class="text-xs px-3 py-1.5 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">Batal</button>
+                                <button id="save-agenda-btn" class="text-xs bg-brand-500 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-brand-600">Simpan</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CENTER COLUMN: TO-DO LIST -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col min-h-[580px]">
+                    <!-- Title & Todo Header -->
+                    <div class="flex items-center justify-between mb-5">
+                        <div class="flex items-center space-x-2">
+                            <span class="p-1.5 bg-brand-50 dark:bg-brand-950/50 text-brand-500 rounded-lg">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                                </svg>
+                            </span>
+                            <h3 class="font-bold text-lg">Daftar Tugas (To-Do)</h3>
+                        </div>
+                        <span id="todo-stats" class="text-xs font-semibold px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-full">0/0 Tugas</span>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="mb-5 bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                        <div id="todo-progress" class="bg-gradient-to-r from-brand-500 to-indigo-500 h-full w-0 transition-all duration-500"></div>
+                    </div>
+
+                    <!-- Input Form To-Do -->
+                    <form id="todo-form" class="space-y-3 mb-6">
+                        <div class="flex gap-2">
+                            <input type="text" id="todo-input" placeholder="Apa yang ingin dikerjakan hari ini?" required class="flex-1 text-sm bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/80 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white">
+                            <button type="submit" class="bg-brand-500 hover:bg-brand-600 text-white font-medium text-sm px-4 rounded-xl transition-all shadow-md shadow-brand-500/10 hover:shadow-brand-500/20 flex items-center justify-center">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xs text-slate-400">Kategori:</span>
+                                <div class="flex space-x-1" id="category-selector">
+                                    <button type="button" data-cat="Kerjaan" class="cat-btn px-2.5 py-1 rounded-lg text-xs font-medium border border-blue-200 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 ring-2 ring-blue-500/30">Kerjaan</button>
+                                    <button type="button" data-cat="Pribadi" class="cat-btn px-2.5 py-1 rounded-lg text-xs font-medium border border-emerald-200 dark:border-emerald-900 bg-emerald-50/50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400">Pribadi</button>
+                                    <button type="button" data-cat="Mendesak" class="cat-btn px-2.5 py-1 rounded-lg text-xs font-medium border border-rose-200 dark:border-rose-900 bg-rose-50/50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400">Mendesak</button>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <span class="text-xs text-slate-400">Tanggal:</span>
+                                <input type="date" id="todo-date" class="text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded px-2 py-1 text-slate-600 dark:text-slate-300">
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Filter Buttons -->
+                    <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
+                        <div class="flex space-x-1">
+                            <button id="filter-all" class="filter-btn text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100">Semua</button>
+                            <button id="filter-active" class="filter-btn text-xs font-medium px-3 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">Aktif</button>
+                            <button id="filter-completed" class="filter-btn text-xs font-medium px-3 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">Selesai</button>
+                        </div>
+                        <button id="clear-completed" class="text-xs text-slate-400 hover:text-rose-500 transition-colors">Hapus Selesai</button>
+                    </div>
+
+                    <!-- Todo List Tasks -->
+                    <div id="todo-list" class="space-y-2.5 overflow-y-auto flex-1 max-h-[320px] pr-1">
+                        <!-- Task items dynamically inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: SCRATCHPAD / NOTES -->
+            <div class="lg:col-span-3 space-y-6">
+                <!-- Workspace Scratchpad -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col min-h-[580px]">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="p-1.5 bg-amber-50 dark:bg-amber-950/50 text-amber-500 rounded-lg">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </span>
+                            <h3 class="font-bold text-lg">Catatan Scratchpad</h3>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-3">Tulis ide cepat, draf, atau catatan sementara di sini. Tersimpan otomatis secara lokal.</p>
+                    <textarea id="scratchpad" placeholder="Mulai mengetik catatan rahasia Anda di sini..." class="w-full flex-1 bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-sm rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white resize-none leading-relaxed"></textarea>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- EXPORT MODAL -->
+    <div id="export-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-lg overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl transform scale-95 transition-all duration-300" id="export-modal-card">
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                <div class="flex items-center space-x-2.5">
+                    <span class="p-2 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-500 rounded-xl">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a4 4 0 00-4-4H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v8m-6 0h6"></path>
+                        </svg>
+                    </span>
+                    <h3 class="font-bold text-lg text-slate-800 dark:text-white">Ekspor Laporan Kinerja</h3>
+                </div>
+                <button id="close-export-btn" class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 rounded-lg transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-6 space-y-5">
+                <!-- Select Period -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Pilih Periode Kerja</label>
+                    <div class="grid grid-cols-2 gap-2" id="period-options">
+                        <button type="button" data-period="today" class="period-btn px-4 py-2.5 rounded-xl border border-brand-500 bg-brand-50/50 dark:bg-brand-950/20 text-brand-600 dark:text-brand-400 font-medium text-xs text-left flex items-center justify-between transition-all ring-2 ring-brand-500/20">
+                            <span>Hari Ini (Harian)</span>
+                            <div class="w-2 h-2 rounded-full bg-brand-500"></div>
+                        </button>
+                        <button type="button" data-period="week" class="period-btn px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700 font-medium text-xs text-left flex items-center justify-between transition-all">
+                            <span>7 Hari Terakhir</span>
+                            <div class="w-2 h-2 rounded-full bg-transparent"></div>
+                        </button>
+                        <button type="button" data-period="month" class="period-btn px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700 font-medium text-xs text-left flex items-center justify-between transition-all">
+                            <span>Bulan Ini (Bulanan)</span>
+                            <div class="w-2 h-2 rounded-full bg-transparent"></div>
+                        </button>
+                        <button type="button" data-period="year" class="period-btn px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700 font-medium text-xs text-left flex items-center justify-between transition-all">
+                            <span>Tahun Ini (Tahunan)</span>
+                            <div class="w-2 h-2 rounded-full bg-transparent"></div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Custom Range Picker (Toggled when period is selected, but shown optionally below) -->
+                <div class="bg-slate-50 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-100 dark:border-slate-800/80 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider block">Atau Rentang Tanggal Kustom</label>
+                        <button id="use-custom-date" class="text-[11px] font-bold text-brand-500 hover:text-brand-600 dark:text-brand-400 transition-colors">Aktifkan Kustom</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 opacity-50 pointer-events-none transition-all duration-300" id="custom-date-inputs">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">Mulai Tanggal</span>
+                            <input type="date" id="export-start-date" class="w-full text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-2 focus:outline-none dark:text-white">
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-400 block mb-1">Sampai Tanggal</span>
+                            <input type="date" id="export-end-date" class="w-full text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-2 focus:outline-none dark:text-white">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export Format Selection -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Pilih Format Berkas</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <!-- Excel option -->
+                        <button id="export-excel-btn" class="p-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 hover:border-emerald-500/30 bg-slate-50/50 dark:bg-slate-900/50 flex flex-col items-center justify-center space-y-2 transition-all group">
+                            <span class="p-2.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-500 rounded-xl group-hover:scale-110 transition-transform">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </span>
+                            <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Microsoft Excel (.xlsx)</span>
+                            <span class="text-[10px] text-slate-400 text-center">Cocok untuk olah data spreadsheet lengkap</span>
+                        </button>
+                        <!-- PDF option -->
+                        <button id="export-pdf-btn" class="p-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 hover:border-rose-500/30 bg-slate-50/50 dark:bg-slate-900/50 flex flex-col items-center justify-center space-y-2 transition-all group">
+                            <span class="p-2.5 bg-rose-50 dark:bg-rose-950/40 text-rose-500 rounded-xl group-hover:scale-110 transition-transform">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </span>
+                            <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Dokumen PDF (.pdf)</span>
+                            <span class="text-[10px] text-slate-400 text-center">Cocok untuk dicetak sebagai berkas fisik</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HIDDEN CONTAINER FOR PDF GENERATION -->
+    <div id="pdf-template-container" class="hidden">
+        <!-- Rendered off-screen during PDF export -->
+    </div>
+
+    <!-- Custom Toast Notification System -->
+    <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-3 rounded-xl shadow-lg transition-all duration-300 flex items-center space-x-2 text-sm z-50">
+        <span id="toast-message">Notifikasi Berhasil!</span>
+    </div>
+
+    <!-- Application Script Logic -->
+    <script>
+        // System Mock Date (for accurate time synchronization corresponding to system requirement)
+        const mockToday = "2026-07-18"; 
+
+        // State Management (Pre-populated with mock initial values with 'createdAt' field added)
+        let todos = JSON.parse(localStorage.getItem('prowork_todos')) || [
+            { id: 1, text: 'Menyiapkan materi review proyek mingguan', completed: false, category: 'Kerjaan', createdAt: '2026-07-18' },
+            { id: 2, text: 'Membeli buah segar dan cemilan sehat', completed: true, category: 'Pribadi', createdAt: '2026-07-17' },
+            { id: 3, text: 'Memperbaiki bug kritis di sistem login', completed: false, category: 'Mendesak', createdAt: '2026-07-18' },
+            { id: 4, text: 'Membuat dokumen perancangan arsitektur data cloud', completed: true, category: 'Kerjaan', createdAt: '2026-07-15' }
+        ];
+
+        let agenda = JSON.parse(localStorage.getItem('prowork_agenda')) || [
+            { id: 1, title: 'Meeting Evaluasi Proyek', time: '10:00', date: '2026-07-18', color: 'indigo' },
+            { id: 2, title: 'Istirahat & Makan Siang', time: '12:00', date: '2026-07-18', color: 'emerald' },
+            { id: 3, title: 'Sesi Desain 1-on-1', time: '15:30', date: '2026-07-18', color: 'amber' },
+            { id: 4, title: 'Interview Calon Frontend Engineer', time: '14:00', date: '2026-07-17', color: 'indigo' }
+        ];
+
+        let selectedCategory = 'Kerjaan';
+        let currentFilter = 'all';
+        let activeExportPeriod = 'today';
+        let isCustomDateActive = false;
+
+        // Elements
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        const scratchpad = document.getElementById('scratchpad');
+
+        // Set default dates inside date forms
+        document.getElementById('todo-date').value = mockToday;
+        document.getElementById('agenda-date').value = mockToday;
+        document.getElementById('export-start-date').value = mockToday;
+        document.getElementById('export-end-date').value = mockToday;
+
+        // Dark Mode Controller
+        function initTheme() {
+            if (localStorage.getItem('theme') === 'light') {
+                document.documentElement.classList.remove('dark');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            } else {
+                document.documentElement.classList.add('dark');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            }
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+                showToast('Mode Terang Aktif');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+                showToast('Mode Gelap Aktif');
+            }
+        });
+
+        // Toast System
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            toastMsg.textContent = message;
+            
+            clearTimeout(toastTimeout);
+            
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2500);
+        }
+
+        // Live Clock & Calendar Controller
+        function startLiveClock() {
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+            function updateTime() {
+                // In a production build we'd use new Date(). For 2026 mockup matching, we compute real time.
+                const now = new Date();
+                const dayName = days[now.getDay()];
+                const monthName = months[now.getMonth()];
+                
+                // Ensure layout matches our mock day but reflects the user's real live seconds and hours
+                document.getElementById('current-day').textContent = "Sabtu";
+                document.getElementById('current-date').textContent = "18 Juli 2026";
+
+                const hrs = String(now.getHours()).padStart(2, '0');
+                const mins = String(now.getMinutes()).padStart(2, '0');
+                const secs = String(now.getSeconds()).padStart(2, '0');
+
+                document.getElementById('live-time').textContent = `${hrs}:${mins}`;
+                document.getElementById('live-seconds').textContent = `:${secs}`;
+            }
+
+            updateTime();
+            setInterval(updateTime, 1000);
+        }
+
+        // Category Selection
+        const catButtons = document.querySelectorAll('.cat-btn');
+        catButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                catButtons.forEach(b => {
+                    b.classList.remove('ring-2', 'ring-blue-500/30', 'ring-emerald-500/30', 'ring-rose-500/30');
+                });
+                selectedCategory = btn.getAttribute('data-cat');
+                let colorRing = selectedCategory === 'Kerjaan' ? 'ring-blue-500/30' : 
+                                selectedCategory === 'Pribadi' ? 'ring-emerald-500/30' : 'ring-rose-500/30';
+                btn.classList.add('ring-2', colorRing);
+            });
+        });
+
+        // To-Do Controller
+        const todoForm = document.getElementById('todo-form');
+        const todoInput = document.getElementById('todo-input');
+        const todoList = document.getElementById('todo-list');
+        const todoStats = document.getElementById('todo-stats');
+        const todoProgress = document.getElementById('todo-progress');
+        const todoDateInput = document.getElementById('todo-date');
+
+        function saveTodos() {
+            localStorage.setItem('prowork_todos', JSON.stringify(todos));
+            renderTodos();
+        }
+
+        function getCategoryStyle(cat) {
+            switch(cat) {
+                case 'Kerjaan':
+                    return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400';
+                case 'Pribadi':
+                    return 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400';
+                case 'Mendesak':
+                    return 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400';
+                default:
+                    return 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300';
+            }
+        }
+
+        function toggleTodo(id) {
+            todos = todos.map(todo => todo.id === id ? { ...todo, completed: !todo.completed } : todo);
+            saveTodos();
+            showToast('Tugas diperbarui!');
+        }
+
+        function deleteTodo(id) {
+            todos = todos.filter(todo => todo.id !== id);
+            saveTodos();
+            showToast('Tugas dihapus');
+        }
+
+        function renderTodos() {
+            todoList.innerHTML = '';
+            
+            const filteredTodos = todos.filter(todo => {
+                if (currentFilter === 'active') return !todo.completed;
+                if (currentFilter === 'completed') return todo.completed;
+                return true;
+            });
+
+            if (filteredTodos.length === 0) {
+                todoList.innerHTML = `
+                    <div class="text-center py-8 text-slate-400 dark:text-slate-500 flex flex-col items-center justify-center">
+                        <svg class="w-12 h-12 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0a2 2 0 01-2 2H6a2 2 0 01-2-2m16 0V9a2 2 0 00-2-2H6a2 2 0 00-2 2v4m16 0v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6"></path>
+                        </svg>
+                        <span class="text-sm font-medium">Belum ada tugas di kategori ini</span>
+                    </div>
+                `;
+            } else {
+                // Sort to show newest first
+                filteredTodos.sort((a, b) => b.id - a.id);
+                
+                filteredTodos.forEach(todo => {
+                    const todoEl = document.createElement('div');
+                    todoEl.className = `flex items-center justify-between p-3.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 hover:border-slate-200 dark:hover:border-slate-700 transition-all ${todo.completed ? 'opacity-60' : ''}`;
+                    
+                    const formattedDateStr = todo.createdAt ? formatIndoDate(todo.createdAt) : 'Hari Ini';
+                    
+                    todoEl.innerHTML = `
+                        <div class="flex items-center space-x-3 flex-1 min-w-0">
+                            <!-- Custom Interactive Checkbox -->
+                            <button onclick="toggleTodo(${todo.id})" class="focus:outline-none flex-shrink-0 w-5 h-5 rounded-md border ${todo.completed ? 'bg-brand-500 border-brand-500 text-white' : 'border-slate-300 dark:border-slate-600 hover:border-brand-500'} flex items-center justify-center transition-colors">
+                                ${todo.completed ? '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>' : ''}
+                            </button>
+                            <div class="flex flex-col truncate pr-2">
+                                <span class="text-sm truncate select-none ${todo.completed ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-700 dark:text-slate-200'}">${escapeHTML(todo.text)}</span>
+                                <span class="text-[10px] text-slate-400 mt-0.5">${formattedDateStr}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2.5 ml-3 flex-shrink-0">
+                            <span class="text-[10px] px-2 py-0.5 rounded-md font-semibold ${getCategoryStyle(todo.category)}">${todo.category}</span>
+                            <button onclick="deleteTodo(${todo.id})" class="text-slate-400 hover:text-rose-500 transition-colors" aria-label="Hapus Tugas">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    `;
+                    todoList.appendChild(todoEl);
+                });
+            }
+
+            // Stats Update
+            const total = todos.length;
+            const completed = todos.filter(t => t.completed).length;
+            todoStats.textContent = `${completed}/${total} Tugas`;
+            
+            // Progress Update
+            const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
+            todoProgress.style.width = `${percent}%`;
+        }
+
+        todoForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = todoInput.value.trim();
+            const dateVal = todoDateInput.value || mockToday;
+            if (!text) return;
+
+            const newTodo = {
+                id: Date.now(),
+                text: text,
+                completed: false,
+                category: selectedCategory,
+                createdAt: dateVal
+            };
+
+            todos.push(newTodo);
+            todoInput.value = '';
+            todoDateInput.value = mockToday;
+            saveTodos();
+            showToast('Tugas baru ditambahkan!');
+        });
+
+        // Filter Functionality
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-800', 'dark:text-slate-100');
+                    b.classList.add('text-slate-500', 'dark:text-slate-400');
+                });
+                btn.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-slate-800', 'dark:text-slate-100');
+                btn.classList.remove('text-slate-500', 'dark:text-slate-400');
+
+                if (btn.id === 'filter-all') currentFilter = 'all';
+                else if (btn.id === 'filter-active') currentFilter = 'active';
+                else if (btn.id === 'filter-completed') currentFilter = 'completed';
+
+                renderTodos();
+            });
+        });
+
+        document.getElementById('clear-completed').addEventListener('click', () => {
+            const beforeLength = todos.length;
+            todos = todos.filter(t => !t.completed);
+            if (todos.length < beforeLength) {
+                saveTodos();
+                showToast('Tugas selesai dibersihkan!');
+            }
+        });
+
+
+        // Agenda Controller
+        const agendaList = document.getElementById('agenda-list');
+        const agendaFormContainer = document.getElementById('agenda-form-container');
+        const addAgendaBtn = document.getElementById('add-agenda-btn');
+        const cancelAgendaBtn = document.getElementById('cancel-agenda-btn');
+        const saveAgendaBtn = document.getElementById('save-agenda-btn');
+
+        const agendaTitle = document.getElementById('agenda-title');
+        const agendaTime = document.getElementById('agenda-time');
+        const agendaDate = document.getElementById('agenda-date');
+        const agendaColor = document.getElementById('agenda-color');
+
+        function saveAgenda() {
+            localStorage.setItem('prowork_agenda', JSON.stringify(agenda));
+            renderAgenda();
+        }
+
+        function getColorClasses(color) {
+            switch(color) {
+                case 'indigo':
+                    return {
+                        bg: 'bg-indigo-50 dark:bg-indigo-950/20 border-l-4 border-indigo-500',
+                        badge: 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-400'
+                    };
+                case 'emerald':
+                    return {
+                        bg: 'bg-emerald-50 dark:bg-emerald-950/20 border-l-4 border-emerald-500',
+                        badge: 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400'
+                    };
+                case 'amber':
+                    return {
+                        bg: 'bg-amber-50 dark:bg-amber-950/20 border-l-4 border-amber-500',
+                        badge: 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400'
+                    };
+                case 'rose':
+                    return {
+                        bg: 'bg-rose-50 dark:bg-rose-950/20 border-l-4 border-rose-500',
+                        badge: 'bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-400'
+                    };
+                default:
+                    return {
+                        bg: 'bg-slate-50 dark:bg-slate-800 border-l-4 border-slate-500',
+                        badge: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
+                    };
+            }
+        }
+
+        function deleteAgenda(id) {
+            agenda = agenda.filter(item => item.id !== id);
+            saveAgenda();
+            showToast('Agenda dihapus');
+        }
+
+        function renderAgenda() {
+            agendaList.innerHTML = '';
+            
+            // Sort by Date, then by Time
+            agenda.sort((a, b) => {
+                const dateCompare = a.date.localeCompare(b.date);
+                if (dateCompare !== 0) return dateCompare;
+                return a.time.localeCompare(b.time);
+            });
+
+            if (agenda.length === 0) {
+                agendaList.innerHTML = `
+                    <div class="text-center py-10 text-slate-400 dark:text-slate-500 flex flex-col items-center justify-center">
+                        <svg class="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="text-xs font-medium">Tidak ada agenda tersisa</span>
+                    </div>
+                `;
+            } else {
+                agenda.forEach(item => {
+                    const colors = getColorClasses(item.color);
+                    const itemEl = document.createElement('div');
+                    itemEl.className = `flex items-center justify-between p-3 rounded-xl border border-slate-100/50 dark:border-slate-800/50 ${colors.bg} hover:shadow-sm transition-all duration-300`;
+                    
+                    const displayDate = formatShortDate(item.date);
+
+                    itemEl.innerHTML = `
+                        <div class="flex items-center space-x-3 flex-1 min-w-0">
+                            <div class="flex flex-col flex-shrink-0 items-start">
+                                <span class="text-xs font-bold px-2 py-0.5 rounded ${colors.badge}">${item.time}</span>
+                                <span class="text-[9px] text-slate-400 mt-1 pl-1">${displayDate}</span>
+                            </div>
+                            <span class="text-xs font-semibold truncate text-slate-700 dark:text-slate-200">${escapeHTML(item.title)}</span>
+                        </div>
+                        <button onclick="deleteAgenda(${item.id})" class="text-slate-400 hover:text-rose-500 transition-colors ml-2" aria-label="Hapus Agenda">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    `;
+                    agendaList.appendChild(itemEl);
+                });
+            }
+        }
+
+        addAgendaBtn.addEventListener('click', () => {
+            agendaFormContainer.classList.toggle('hidden');
+            if (!agendaFormContainer.classList.contains('hidden')) {
+                agendaTitle.focus();
+            }
+        });
+
+        cancelAgendaBtn.addEventListener('click', () => {
+            agendaFormContainer.classList.add('hidden');
+            clearAgendaForm();
+        });
+
+        saveAgendaBtn.addEventListener('click', () => {
+            const title = agendaTitle.value.trim();
+            const time = agendaTime.value;
+            const dateVal = agendaDate.value || mockToday;
+            const color = agendaColor.value;
+
+            if (!title || !time) {
+                showToast('Isi judul dan waktu!');
+                return;
+            }
+
+            const newItem = {
+                id: Date.now(),
+                title: title,
+                time: time,
+                date: dateVal,
+                color: color
+            };
+
+            agenda.push(newItem);
+            saveAgenda();
+            clearAgendaForm();
+            agendaFormContainer.classList.add('hidden');
+            showToast('Agenda berhasil dibuat!');
+        });
+
+        function clearAgendaForm() {
+            agendaTitle.value = '';
+            agendaTime.value = '';
+            agendaDate.value = mockToday;
+            agendaColor.value = 'indigo';
+        }
+
+
+        // Scratchpad Controller
+        function initScratchpad() {
+            scratchpad.value = localStorage.getItem('prowork_scratchpad') || '';
+            
+            scratchpad.addEventListener('input', (e) => {
+                localStorage.setItem('prowork_scratchpad', e.target.value);
+            });
+        }
+
+
+        // Date-Based Data Filter Helper
+        function getFilteredData(period, customStart, customEnd) {
+            const baseDate = new Date(mockToday);
+            let startDate, endDate;
+
+            if (isCustomDateActive) {
+                startDate = new Date(customStart);
+                endDate = new Date(customEnd);
+                // Adjust to cover the full end day
+                endDate.setHours(23, 59, 59, 999);
+            } else {
+                endDate = new Date(mockToday);
+                endDate.setHours(23, 59, 59, 999);
+                startDate = new Date(mockToday);
+                startDate.setHours(0, 0, 0, 0);
+
+                if (period === 'week') {
+                    startDate.setDate(startDate.getDate() - 7);
+                } else if (period === 'month') {
+                    startDate.setDate(1); // First day of current month
+                } else if (period === 'year') {
+                    startDate.setMonth(0, 1); // First day of current year
+                }
+            }
+
+            // Filter Todos
+            const filteredTodos = todos.filter(t => {
+                const todoDate = new Date(t.createdAt);
+                return todoDate >= startDate && todoDate <= endDate;
+            });
+
+            // Filter Agendas
+            const filteredAgendas = agenda.filter(a => {
+                const agendaDate = new Date(a.date);
+                return agendaDate >= startDate && agendaDate <= endDate;
+            });
+
+            return {
+                todos: filteredTodos,
+                agendas: filteredAgendas,
+                startDate: startDate,
+                endDate: endDate
+            };
+        }
+
+
+        // --- MODAL & EXPORT LOGIC ---
+        const openExportBtn = document.getElementById('open-export-btn');
+        const closeExportBtn = document.getElementById('close-export-btn');
+        const exportModal = document.getElementById('export-modal');
+        const exportModalCard = document.getElementById('export-modal-card');
+
+        openExportBtn.addEventListener('click', () => {
+            exportModal.classList.remove('pointer-events-none', 'opacity-0');
+            exportModalCard.classList.remove('scale-95');
+            exportModalCard.classList.add('scale-100');
+        });
+
+        function closeModal() {
+            exportModal.classList.add('pointer-events-none', 'opacity-0');
+            exportModalCard.classList.remove('scale-100');
+            exportModalCard.classList.add('scale-95');
+        }
+
+        closeExportBtn.addEventListener('click', closeModal);
+        exportModal.addEventListener('click', (e) => {
+            if (e.target === exportModal) closeModal();
+        });
+
+        // Period Selection logic
+        const periodBtns = document.querySelectorAll('.period-btn');
+        periodBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                periodBtns.forEach(b => {
+                    b.classList.remove('border-brand-500', 'bg-brand-50/50', 'dark:bg-brand-950/20', 'text-brand-600', 'dark:text-brand-400', 'ring-2', 'ring-brand-500/20');
+                    b.classList.add('border-slate-200', 'dark:border-slate-800', 'text-slate-600', 'dark:text-slate-400');
+                    b.querySelector('div').className = 'w-2 h-2 rounded-full bg-transparent';
+                });
+
+                btn.classList.add('border-brand-500', 'bg-brand-50/50', 'dark:bg-brand-950/20', 'text-brand-600', 'dark:text-brand-400', 'ring-2', 'ring-brand-500/20');
+                btn.classList.remove('border-slate-200', 'dark:border-slate-800', 'text-slate-600', 'dark:text-slate-400');
+                btn.querySelector('div').className = 'w-2 h-2 rounded-full bg-brand-500';
+
+                activeExportPeriod = btn.getAttribute('data-period');
+                
+                // If switching to pre-set periods, disable custom date highlight
+                if (isCustomDateActive) {
+                    toggleCustomDatePicker(false);
+                }
+            });
+        });
+
+        // Toggle Custom Date Picker Button
+        const useCustomDateBtn = document.getElementById('use-custom-date');
+        const customDateInputs = document.getElementById('custom-date-inputs');
+
+        useCustomDateBtn.addEventListener('click', () => {
+            toggleCustomDatePicker(!isCustomDateActive);
+        });
+
+        function toggleCustomDatePicker(active) {
+            isCustomDateActive = active;
+            if (active) {
+                customDateInputs.classList.remove('opacity-50', 'pointer-events-none');
+                useCustomDateBtn.textContent = 'Gunakan Period Statis';
+                useCustomDateBtn.classList.add('text-emerald-500');
+                
+                // Clear selected static period buttons highlight
+                periodBtns.forEach(b => {
+                    b.classList.remove('border-brand-500', 'bg-brand-50/50', 'dark:bg-brand-950/20', 'text-brand-600', 'dark:text-brand-400', 'ring-2', 'ring-brand-500/20');
+                    b.classList.add('border-slate-200', 'dark:border-slate-800', 'text-slate-600', 'dark:text-slate-400');
+                    b.querySelector('div').className = 'w-2 h-2 rounded-full bg-transparent';
+                });
+            } else {
+                customDateInputs.classList.add('opacity-50', 'pointer-events-none');
+                useCustomDateBtn.textContent = 'Aktifkan Kustom';
+                useCustomDateBtn.classList.remove('text-emerald-500');
+                
+                // Re-enable "Today" as default highlighted button
+                const todayBtn = document.querySelector('[data-period="today"]');
+                todayBtn.click();
+            }
+        }
+
+
+        // --- EXPORT CONTROLLER: EXCEL ---
+        document.getElementById('export-excel-btn').addEventListener('click', () => {
+            const startVal = document.getElementById('export-start-date').value;
+            const endVal = document.getElementById('export-end-date').value;
+            const data = getFilteredData(activeExportPeriod, startVal, endVal);
+
+            if (data.todos.length === 0 && data.agendas.length === 0) {
+                showToast('Tidak ada data kerja dalam rentang waktu ini!');
+                return;
+            }
+
+            // Prepare Todos Data Sheet
+            const todoSheetData = data.todos.map((t, idx) => ({
+                "No": idx + 1,
+                "Tanggal Dibuat": t.createdAt,
+                "Deskripsi Tugas": t.text,
+                "Kategori": t.category,
+                "Status": t.completed ? "Selesai" : "Belum Selesai"
+            }));
+
+            // Prepare Agenda Data Sheet
+            const agendaSheetData = data.agendas.map((a, idx) => ({
+                "No": idx + 1,
+                "Tanggal": a.date,
+                "Jam": a.time,
+                "Nama Acara/Agenda": a.title,
+                "Label Warna": a.color.toUpperCase()
+            }));
+
+            // Create Book and Sheets
+            const wb = XLSX.utils.book_new();
+            
+            const wsTodos = XLSX.utils.json_to_sheet(todoSheetData);
+            const wsAgenda = XLSX.utils.json_to_sheet(agendaSheetData);
+
+            XLSX.utils.book_append_sheet(wb, wsTodos, "Daftar Tugas (To-Do)");
+            XLSX.utils.book_append_sheet(wb, wsAgenda, "Agenda Acara");
+
+            // Save Spreadsheet
+            const filePeriodName = isCustomDateActive ? `${startVal}_s_d_${endVal}` : activeExportPeriod;
+            XLSX.writeFile(wb, `Laporan_Produktivitas_ProWork_${filePeriodName}.xlsx`);
+            
+            showToast('Laporan Excel berhasil diunduh!');
+            closeModal();
+        });
+
+
+        // --- EXPORT CONTROLLER: PDF ---
+        document.getElementById('export-pdf-btn').addEventListener('click', () => {
+            const startVal = document.getElementById('export-start-date').value;
+            const endVal = document.getElementById('export-end-date').value;
+            const data = getFilteredData(activeExportPeriod, startVal, endVal);
+
+            if (data.todos.length === 0 && data.agendas.length === 0) {
+                showToast('Tidak ada data kerja dalam rentang waktu ini!');
+                return;
+            }
+
+            // Generate beautifully structured temporary HTML node
+            const pdfContainer = document.getElementById('pdf-template-container');
+            
+            const totalTodos = data.todos.length;
+            const doneTodos = data.todos.filter(t => t.completed).length;
+            const activeTodos = totalTodos - doneTodos;
+            const completionRate = totalTodos > 0 ? Math.round((doneTodos / totalTodos) * 100) : 0;
+
+            const dateHeaderStr = isCustomDateActive 
+                ? `${formatIndoDate(startVal)} s.d ${formatIndoDate(endVal)}`
+                : getPeriodLabel(activeExportPeriod);
+
+            let todoRowsHTML = data.todos.map((t, idx) => `
+                <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 10px; font-size: 11px; text-align: center; color: #475569;">${idx + 1}</td>
+                    <td style="padding: 10px; font-size: 11px; color: #475569;">${formatShortDate(t.createdAt)}</td>
+                    <td style="padding: 10px; font-size: 11px; font-weight: 500; color: #1e293b;">${escapeHTML(t.text)}</td>
+                    <td style="padding: 10px; font-size: 11px; text-align: center; color: #475569;"><span style="background: #eff6ff; color: #2563eb; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 9px;">${t.category}</span></td>
+                    <td style="padding: 10px; font-size: 11px; text-align: center;">
+                        ${t.completed 
+                            ? `<span style="background: #ecfdf5; color: #059669; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 9px;">SELESAI</span>`
+                            : `<span style="background: #fff1f2; color: #e11d48; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 9px;">TERTUNDA</span>`
+                        }
+                    </td>
+                </tr>
+            `).join('');
+
+            if (data.todos.length === 0) {
+                todoRowsHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px; color: #94a3b8; font-size: 12px;">Tidak ada riwayat tugas pada periode ini.</td></tr>`;
+            }
+
+            let agendaRowsHTML = data.agendas.map((a, idx) => `
+                <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 10px; font-size: 11px; text-align: center; color: #475569;">${idx + 1}</td>
+                    <td style="padding: 10px; font-size: 11px; color: #475569;">${formatShortDate(a.date)}</td>
+                    <td style="padding: 10px; font-size: 11px; font-weight: 600; color: #4f46e5;">${a.time}</td>
+                    <td style="padding: 10px; font-size: 11px; font-weight: 500; color: #1e293b;">${escapeHTML(a.title)}</td>
+                    <td style="padding: 10px; font-size: 11px; text-align: center;"><span style="background: #f1f5f9; color: #334155; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 9px; text-transform: uppercase;">${a.color}</span></td>
+                </tr>
+            `).join('');
+
+            if (data.agendas.length === 0) {
+                agendaRowsHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px; color: #94a3b8; font-size: 12px;">Tidak ada jadwal agenda pada periode ini.</td></tr>`;
+            }
+
+            // Populate the temporary container styled purely with standard CSS for flawless PDF rendering
+            pdfContainer.innerHTML = `
+                <div style="font-family: 'Inter', sans-serif; padding: 30px; color: #1e293b; background: white; max-width: 800px; margin: 0 auto;">
+                    <!-- Report Header -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #6366f1; padding-bottom: 20px; margin-bottom: 25px;">
+                        <div>
+                            <h1 style="font-size: 24px; font-weight: 800; color: #4f46e5; margin: 0; letter-spacing: -0.5px;">PROWORK PRODUKTIVITAS REPORT</h1>
+                            <p style="font-size: 11px; color: #64748b; margin: 4px 0 0 0;">Laporan Kinerja Harian Terintegrasi &amp; Agenda Kerja Berkelanjutan</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-size: 10px; font-weight: bold; background: #e0e7ff; color: #4f46e5; padding: 4px 10px; border-radius: 6px; text-transform: uppercase;">Sistem Terverifikasi</span>
+                            <p style="font-size: 10px; color: #94a3b8; margin: 6px 0 0 0;">Dicetak: 18 Juli 2026</p>
+                        </div>
+                    </div>
+
+                    <!-- Meta details grid -->
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; margin-bottom: 25px;">
+                        <h2 style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; margin: 0 0 10px 0; font-weight: 700;">Rincian Dokumen Laporan</h2>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                            <tr>
+                                <td style="padding: 4px 0; color: #64748b; width: 30%;">Periode Penilaian</td>
+                                <td style="padding: 4px 0; font-weight: bold; color: #0f172a;">: ${dateHeaderStr}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px 0; color: #64748b;">Pengguna / Staff</td>
+                                <td style="padding: 4px 0; font-weight: bold; color: #0f172a;">: Kontributor ProWork Internal</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px 0; color: #64748b;">Metrik Integrasi</td>
+                                <td style="padding: 4px 0; font-weight: bold; color: #0f172a;">: To-Do List &amp; Rapat Agenda Terjadwal</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Summary KPI Stats -->
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px;">
+                        <div style="background: #f1f5f9; padding: 12px; border-radius: 10px; text-align: center;">
+                            <span style="font-size: 10px; color: #64748b; font-weight: 600; text-transform: uppercase;">Total Tugas</span>
+                            <div style="font-size: 20px; font-weight: 800; color: #1e293b; margin-top: 5px;">${totalTodos}</div>
+                        </div>
+                        <div style="background: #ecfdf5; padding: 12px; border-radius: 10px; text-align: center; border: 1px solid #a7f3d0;">
+                            <span style="font-size: 10px; color: #047857; font-weight: 600; text-transform: uppercase;">Selesai</span>
+                            <div style="font-size: 20px; font-weight: 800; color: #065f46; margin-top: 5px;">${doneTodos}</div>
+                        </div>
+                        <div style="background: #fff1f2; padding: 12px; border-radius: 10px; text-align: center; border: 1px solid #fecdd3;">
+                            <span style="font-size: 10px; color: #be123c; font-weight: 600; text-transform: uppercase;">Tertunda</span>
+                            <div style="font-size: 20px; font-weight: 800; color: #9f1239; margin-top: 5px;">${activeTodos}</div>
+                        </div>
+                        <div style="background: #eef2ff; padding: 12px; border-radius: 10px; text-align: center; border: 1px solid #c7d2fe;">
+                            <span style="font-size: 10px; color: #4338ca; font-weight: 600; text-transform: uppercase;">Penyelesaian</span>
+                            <div style="font-size: 20px; font-weight: 800; color: #3730a3; margin-top: 5px;">${completionRate}%</div>
+                        </div>
+                    </div>
+
+                    <!-- Section: To-Do Tasks Table -->
+                    <div style="margin-bottom: 30px;">
+                        <h3 style="font-size: 13px; font-weight: bold; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 12px; text-transform: uppercase; color: #1e293b; letter-spacing: -0.2px;">A. Riwayat Tugas &amp; Pekerjaan</h3>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: #f1f5f9; border-bottom: 2px solid #cbd5e1;">
+                                    <th style="padding: 8px; font-size: 10px; font-weight: bold; color: #475569; text-align: center; width: 6%;">No</th>
+                                    <th style="padding: 8px; font-size: 10px; font-weight: bold; color: #475569; text-align: left; width: 18%;">Tanggal</th>
+                                    <th style="padding: 8px; font-size: 10px; font-weight: bold; color: #475569; text-align: left;">Detail Tugas</th>
+                                    <th style="padding: 8px; font-size: 10px; font-weight: bold; color: #475569; text-align: center; width: 16%;">Kategori</th>
+                                    <th style="padding: 8px; font-size: 10px; font-weight: bold; color: #475569; text-align: center; width: 16%;">Status Kerja</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${todoRowsHTML}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Section: Agenda Table -->
+                    <div>
+                        <h3 style="font-size: 13px; font-weight: bold; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 12px; text-transform: uppercase; color: #1e293b; letter-spacing: -0.2px;">B. Jadwal Pertemuan &amp; Agenda Acara</h3>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: #f1f5f9; border-bottom: 2px solid #cbd5e1;">
+                                    <th style="padding: 8px; font-size: 10px; font-weight: bold; color: #475569; text-align: center; width: 6%;">No</th>
+                                    <th style="padding: 8px; font-size: 10px; font-weight: bold; color: #475569; text-align: left; width: 18%;">Tanggal</th>
+                                    <th style="padding: 8px; font-size: 10px; font-weight: bold; color: #475569; text-align: left; width: 15%;">Waktu</th>
+                                    <th style="padding: 8px; font-size: 10px; font-weight: bold; color: #475569; text-align: left;">Deskripsi Agenda</th>
+                                    <th style="padding: 8px; font-size: 10px; font-weight: bold; color: #475569; text-align: center; width: 16%;">Label</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${agendaRowsHTML}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Footer signature/notes -->
+                    <div style="margin-top: 50px; border-top: 1px dashed #cbd5e1; padding-top: 15px; text-align: center; font-size: 10px; color: #94a3b8;">
+                        <p style="margin: 0;">Laporan ini dicetak secara otomatis melalui portal dasbor pribadi ProWork.</p>
+                        <p style="margin: 3px 0 0 0;">Semua data telah disinkronkan dari penyimpanan aman lokal Anda.</p>
+                    </div>
+                </div>
+            `;
+
+            // Prepare configuration options for html2pdf
+            const filePeriodName = isCustomDateActive ? `${startVal}_sd_${endVal}` : activeExportPeriod;
+            const opt = {
+                margin:       10,
+                filename:     `Laporan_Produktivitas_ProWork_${filePeriodName}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Run html2pdf generator
+            pdfContainer.classList.remove('hidden'); // momentarily unhide to guarantee render engine access
+            html2pdf().from(pdfContainer).set(opt).save().then(() => {
+                pdfContainer.classList.add('hidden'); // hidden back
+                showToast('Laporan PDF berhasil diunduh!');
+                closeModal();
+            }).catch(err => {
+                pdfContainer.classList.add('hidden');
+                showToast('Gagal memproses PDF, silakan coba lagi.');
+            });
+        });
+
+
+        // --- HELPERS FOR DATE FORMATS ---
+        function formatIndoDate(dateStr) {
+            if (!dateStr) return '';
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            const p = dateStr.split('-');
+            if (p.length !== 3) return dateStr;
+            const year = p[0];
+            const monthIndex = parseInt(p[1], 10) - 1;
+            const day = parseInt(p[2], 10);
+            return `${day} ${months[monthIndex]} ${year}`;
+        }
+
+        function formatShortDate(dateStr) {
+            if (!dateStr) return '';
+            const p = dateStr.split('-');
+            if (p.length !== 3) return dateStr;
+            return `${p[2]}/${p[1]}/${p[0].substring(2)}`;
+        }
+
+        function getPeriodLabel(period) {
+            switch(period) {
+                case 'today': return 'Hari Ini (Harian)';
+                case 'week': return '7 Hari Terakhir (Mingguan)';
+                case 'month': return 'Bulan Ini (Bulanan)';
+                case 'year': return 'Tahun Ini (Tahunan)';
+                default: return 'Semua Periode';
+            }
+        }
+
+        // Helper Utility (Prevent HTML injection/XSS)
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    "'": '&#39;',
+                    '"': '&quot;'
+                }[tag] || tag)
+            );
+        }
+
+        // Initialize App
+        window.onload = function() {
+            initTheme();
+            startLiveClock();
+            renderTodos();
+            renderAgenda();
+            initScratchpad();
+        };
+    </script>
+</body>
+</html>
