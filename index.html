@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProWork - Dashboard Produktivitas Premium</title>
+    <title>Renca Kerja- Dashboard Produktivitas Premium</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -107,8 +107,8 @@
                     
                     <div class="flex items-start justify-between relative z-10">
                         <div>
-                            <span id="current-day" class="text-xs font-semibold uppercase tracking-wider text-brand-500 dark:text-brand-400">Sabtu</span>
-                            <h2 id="current-date" class="text-xl font-bold mt-1 text-slate-800 dark:text-white">18 Juli 2026</h2>
+                            <span id="current-day" class="text-xs font-semibold uppercase tracking-wider text-brand-500 dark:text-brand-400">Memuat...</span>
+                            <h2 id="current-date" class="text-xl font-bold mt-1 text-slate-800 dark:text-white">Memuat Tanggal...</h2>
                         </div>
                         <div class="p-2 bg-brand-50 dark:bg-brand-950/50 rounded-xl">
                             <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -119,8 +119,8 @@
                     
                     <!-- Digital Clock -->
                     <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-baseline space-x-1">
-                        <span id="live-time" class="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-brand-500 to-indigo-500 dark:from-brand-400 dark:to-indigo-300 bg-clip-text text-transparent">14:44</span>
-                        <span id="live-seconds" class="text-lg font-medium text-slate-400">:00</span>
+                        <span id="live-time" class="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-brand-500 to-indigo-500 dark:from-brand-400 dark:to-indigo-300 bg-clip-text text-transparent">--:--</span>
+                        <span id="live-seconds" class="text-lg font-medium text-slate-400">:--</span>
                     </div>
                 </div>
 
@@ -362,22 +362,33 @@
 
     <!-- Application Script Logic -->
     <script>
-        // System Mock Date (for accurate time synchronization corresponding to system requirement)
-        const mockToday = "2026-07-18"; 
+        // System Date (Dinamis mendeteksi tanggal hari ini)
+        const getLocalDateString = (offsetDays = 0) => {
+            const d = new Date();
+            if (offsetDays !== 0) {
+                d.setDate(d.getDate() - offsetDays);
+            }
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const dayNum = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${dayNum}`;
+        };
 
-        // State Management (Pre-populated with mock initial values with 'createdAt' field added)
+        const mockToday = getLocalDateString(0); 
+
+        // State Management (Dinamis menggunakan penanggalan hari ini secara otomatis)
         let todos = JSON.parse(localStorage.getItem('prowork_todos')) || [
-            { id: 1, text: 'Menyiapkan materi review proyek mingguan', completed: false, category: 'Kerjaan', createdAt: '2026-07-18' },
-            { id: 2, text: 'Membeli buah segar dan cemilan sehat', completed: true, category: 'Pribadi', createdAt: '2026-07-17' },
-            { id: 3, text: 'Memperbaiki bug kritis di sistem login', completed: false, category: 'Mendesak', createdAt: '2026-07-18' },
-            { id: 4, text: 'Membuat dokumen perancangan arsitektur data cloud', completed: true, category: 'Kerjaan', createdAt: '2026-07-15' }
+            { id: 1, text: 'Menyiapkan materi review proyek mingguan', completed: false, category: 'Kerjaan', createdAt: getLocalDateString(0) },
+            { id: 2, text: 'Membeli buah segar dan cemilan sehat', completed: true, category: 'Pribadi', createdAt: getLocalDateString(1) },
+            { id: 3, text: 'Memperbaiki bug kritis di sistem login', completed: false, category: 'Mendesak', createdAt: getLocalDateString(0) },
+            { id: 4, text: 'Membuat dokumen perancangan arsitektur data cloud', completed: true, category: 'Kerjaan', createdAt: getLocalDateString(3) }
         ];
 
         let agenda = JSON.parse(localStorage.getItem('prowork_agenda')) || [
-            { id: 1, title: 'Meeting Evaluasi Proyek', time: '10:00', date: '2026-07-18', color: 'indigo' },
-            { id: 2, title: 'Istirahat & Makan Siang', time: '12:00', date: '2026-07-18', color: 'emerald' },
-            { id: 3, title: 'Sesi Desain 1-on-1', time: '15:30', date: '2026-07-18', color: 'amber' },
-            { id: 4, title: 'Interview Calon Frontend Engineer', time: '14:00', date: '2026-07-17', color: 'indigo' }
+            { id: 1, title: 'Meeting Evaluasi Proyek', time: '10:00', date: getLocalDateString(0), color: 'indigo' },
+            { id: 2, title: 'Istirahat & Makan Siang', time: '12:00', date: getLocalDateString(0), color: 'emerald' },
+            { id: 3, title: 'Sesi Desain 1-on-1', time: '15:30', date: getLocalDateString(0), color: 'amber' },
+            { id: 4, title: 'Interview Calon Frontend Engineer', time: '14:00', date: getLocalDateString(1), color: 'indigo' }
         ];
 
         let selectedCategory = 'Kerjaan';
@@ -444,20 +455,19 @@
             }, 2500);
         }
 
-        // Live Clock & Calendar Controller
+        // Live Clock & Calendar Controller (Memperbaiki Tanggal & Hari Terupdate Otomatis)
         function startLiveClock() {
             const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
             const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
             function updateTime() {
-                // In a production build we'd use new Date(). For 2026 mockup matching, we compute real time.
                 const now = new Date();
                 const dayName = days[now.getDay()];
                 const monthName = months[now.getMonth()];
                 
-                // Ensure layout matches our mock day but reflects the user's real live seconds and hours
-                document.getElementById('current-day').textContent = "Sabtu";
-                document.getElementById('current-date').textContent = "18 Juli 2026";
+                // Menampilkan hari dan tanggal dinamis secara real-time berdasarkan waktu lokal sistem
+                document.getElementById('current-day').textContent = dayName;
+                document.getElementById('current-date').textContent = `${now.getDate()} ${monthName} ${now.getFullYear()}`;
 
                 const hrs = String(now.getHours()).padStart(2, '0');
                 const mins = String(now.getMinutes()).padStart(2, '0');
@@ -789,10 +799,9 @@
             });
         }
 
-
         // Date-Based Data Filter Helper
         function getFilteredData(period, customStart, customEnd) {
-            const baseDate = new Date(mockToday);
+            const baseDate = new Date();
             let startDate, endDate;
 
             if (isCustomDateActive) {
@@ -801,9 +810,9 @@
                 // Adjust to cover the full end day
                 endDate.setHours(23, 59, 59, 999);
             } else {
-                endDate = new Date(mockToday);
+                endDate = new Date();
                 endDate.setHours(23, 59, 59, 999);
-                startDate = new Date(mockToday);
+                startDate = new Date();
                 startDate.setHours(0, 0, 0, 0);
 
                 if (period === 'week') {
@@ -1029,7 +1038,7 @@
                         </div>
                         <div style="text-align: right;">
                             <span style="font-size: 10px; font-weight: bold; background: #e0e7ff; color: #4f46e5; padding: 4px 10px; border-radius: 6px; text-transform: uppercase;">Sistem Terverifikasi</span>
-                            <p style="font-size: 10px; color: #94a3b8; margin: 6px 0 0 0;">Dicetak: 18 Juli 2026</p>
+                            <p style="font-size: 10px; color: #94a3b8; margin: 6px 0 0 0;">Dicetak pada: ${formatIndoDate(mockToday)}</p>
                         </div>
                     </div>
 
