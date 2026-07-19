@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda Kerja - Dashboard Produktivitas Real-Time Premium</title>
+    <title>ProWork - Dashboard Produktivitas Real-Time Premium</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -70,10 +70,10 @@
                 </div>
             </div>
 
-            <!-- Connection Status -->
-            <div class="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-xs">
+            <!-- Connection Status (Dynamic & Resilient) -->
+            <div id="connection-badge" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-xs transition-all duration-300 cursor-pointer" title="Klik untuk rincian koneksi database">
                 <span id="connection-indicator" class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
-                <span id="connection-text" class="text-slate-600 dark:text-slate-300 font-medium">Menghubungkan...</span>
+                <span id="connection-text" class="text-slate-600 dark:text-slate-300 font-semibold">Menghubungkan...</span>
             </div>
 
             <!-- Header Controls -->
@@ -124,11 +124,11 @@
                         </div>
                         
                         <!-- User Details -->
-                        <h2 id="profile-name" class="text-lg font-bold text-slate-800 dark:text-white truncate max-w-full">Masukkan Nama</h2>
-                        <p id="profile-job" class="text-sm font-semibold text-brand-500 dark:text-brand-400 mt-1 truncate max-w-full">Masukkan Jabatan</p>
+                        <h2 id="profile-name" class="text-lg font-bold text-slate-800 dark:text-white truncate max-w-full">Memuat nama...</h2>
+                        <p id="profile-job" class="text-sm font-semibold text-brand-500 dark:text-brand-400 mt-1 truncate max-w-full">Memuat jabatan...</p>
                         
                         <div class="mt-3 px-3 py-1 bg-slate-100 dark:bg-slate-800/80 rounded-full border border-slate-200/50 dark:border-slate-700/50 text-xs text-slate-500 dark:text-slate-400 truncate max-w-full">
-                            Unit: <span id="profile-unit" class="font-medium text-slate-700 dark:text-slate-300">Masukkan Unit Kerja</span>
+                            Unit: <span id="profile-unit" class="font-medium text-slate-700 dark:text-slate-300">Memuat unit...</span>
                         </div>
                     </div>
                 </div>
@@ -281,7 +281,7 @@
                             <h3 class="font-bold text-lg">Catatan Scratchpad</h3>
                         </div>
                     </div>
-                    <p class="text-xs text-slate-400 mb-3">Tulis ide cepat, draf, atau catatan sementara di sini. Tersimpan otomatis online.</p>
+                    <p class="text-xs text-slate-400 mb-3">Tulis ide cepat, draf, atau catatan sementara di sini. Tersimpan otomatis real-time.</p>
                     <textarea id="scratchpad" placeholder="Mulai mengetik catatan rahasia Anda di sini..." class="w-full flex-1 bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-sm rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white resize-none leading-relaxed"></textarea>
                     <span id="scratchpad-sync-status" class="text-[10px] text-right text-slate-400 mt-2">Sinkronisasi Cloud Aktif</span>
                 </div>
@@ -290,9 +290,9 @@
         </div>
     </main>
 
-    <!-- PROFILE EDIT MODAL -->
+    <!-- PROFILE EDIT MODAL WITH CONFIGURABLE CLOUD SETTINGS -->
     <div id="profile-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
-        <div class="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-md overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl transform scale-95 transition-all duration-300" id="profile-modal-card">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-lg overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl transform scale-95 transition-all duration-300 overflow-y-auto max-h-[90vh]" id="profile-modal-card">
             <!-- Header -->
             <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                 <div class="flex items-center space-x-2.5">
@@ -301,7 +301,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                         </svg>
                     </span>
-                    <h3 class="font-bold text-lg text-slate-800 dark:text-white">Ubah Profil Pengguna</h3>
+                    <h3 class="font-bold text-lg text-slate-800 dark:text-white">Pengaturan Pengguna &amp; Cloud</h3>
                 </div>
                 <button id="close-profile-btn" class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 rounded-lg transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -316,11 +316,11 @@
                 <div>
                     <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Foto Profil</label>
                     <div class="flex items-center space-x-4">
-                        <img id="modal-profile-preview" src="https://placehold.co/150x150/4f46e5/ffffff?text=User" alt="Preview" class="w-16 h-16 object-cover rounded-full border-2 border-indigo-500">
+                        <img id="modal-profile-preview" src="https://placehold.co/150x150/4f46e5/ffffff?text=User" alt="Preview" class="w-16 h-16 object-cover rounded-full border-2 border-indigo-500 shadow">
                         <div class="flex-1">
                             <input type="file" id="input-profile-file" accept="image/*" class="hidden">
                             <button type="button" onclick="document.getElementById('input-profile-file').click()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300 rounded-xl transition-all border border-slate-200 dark:border-slate-700">Pilih Foto</button>
-                            <p class="text-[10px] text-slate-400 mt-1.5">Max format PNG/JPG. Ukuran optimal akan dikompres secara otomatis.</p>
+                            <p class="text-[10px] text-slate-400 mt-1.5">Mendukung format PNG/JPG. Ukuran file akan dikompresi otomatis untuk kecepatan transfer cloud.</p>
                         </div>
                     </div>
                 </div>
@@ -341,6 +341,33 @@
                 <div>
                     <label for="input-profile-unit" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Unit Kerja</label>
                     <input type="text" id="input-profile-unit" placeholder="Contoh: Divisi IT / Operasional" class="w-full text-sm bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white">
+                </div>
+
+                <!-- ADVANCED ACCORDION: DATABASE SETTINGS (To easily fix/custom config permission issues) -->
+                <div class="border-t border-slate-100 dark:border-slate-800 pt-4 mt-2">
+                    <button id="toggle-cloud-settings" type="button" class="flex items-center justify-between w-full text-left text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider py-1 hover:text-brand-500 transition-colors">
+                        <span>Konfigurasi Cloud Firestore (Lanjutan)</span>
+                        <svg id="cloud-settings-chevron" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    
+                    <div id="cloud-settings-content" class="hidden mt-3 space-y-3 bg-slate-50 dark:bg-slate-950/50 p-4 rounded-xl border border-slate-200/50 dark:border-slate-800/50">
+                        <p class="text-[11px] text-slate-400 leading-relaxed">
+                            Jika Anda mendapatkan error <code class="text-rose-500">Missing or insufficient permissions</code> pada server default, Anda dapat menggunakan Firebase Anda sendiri dengan menempelkan konfigurasinya di bawah ini secara gratis.
+                        </p>
+                        <div>
+                            <label class="block text-[10px] text-slate-400 mb-0.5">Custom Room Key (ID Sinkronisasi)</label>
+                            <input type="text" id="cloud-room-id" placeholder="Biarkan kosong untuk ID default" class="w-full text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-2 focus:outline-none dark:text-white">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-slate-400 mb-0.5">Firebase JSON Config (Opsional)</label>
+                            <textarea id="cloud-firebase-config" placeholder='{"apiKey": "AIza...", "authDomain": "...", "projectId": "...", "appId": "..."}' rows="4" class="w-full text-xs font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-2 focus:outline-none dark:text-white resize-none"></textarea>
+                        </div>
+                        <div class="flex justify-end pt-1">
+                            <button id="clear-custom-cloud" type="button" class="text-[10px] text-slate-400 hover:text-rose-500 font-semibold">Kembalikan ke Default</button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Actions -->
@@ -462,47 +489,32 @@
         import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Global and Environment Firebase Configurations
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'prowork-prod-app';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' 
-            ? JSON.parse(__firebase_config) 
-            : {
-                apiKey: "",
-                authDomain: "mock-auth-domain.firebaseapp.com",
-                projectId: "mock-project-id",
-                storageBucket: "mock-storage-bucket.appspot.com",
-                messagingSenderId: "1234567890",
-                appId: "1:12345:web:abcdef"
-            };
+        const customConfig = localStorage.getItem('prowork_custom_firebase');
+        const customRoomId = localStorage.getItem('prowork_custom_room');
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
+        const appId = customRoomId || (typeof __app_id !== 'undefined' ? __app_id : 'prowork-prod-app');
+        
+        let firebaseConfig;
+        if (customConfig) {
+            try {
+                firebaseConfig = JSON.parse(customConfig);
+            } catch(e) {
+                console.error("Custom Config Error:", e);
+            }
+        }
 
-        // State & Local Copy variables
-        let todos = [];
-        let agenda = [];
-        let profile = {
-            photo: 'https://placehold.co/150x150/4f46e5/ffffff?text=User',
-            name: 'Contributor ProWork',
-            job: 'Profesional Staff',
-            unit: 'Kantor Pusat'
-        };
-        let isAuthCompleted = false;
-
-        // Offline / Live state variables
-        let selectedCategory = 'Kerjaan';
-        let currentFilter = 'all';
-        let activeExportPeriod = 'today';
-        let isCustomDateActive = false;
-
-        // Elements
-        const darkModeToggle = document.getElementById('dark-mode-toggle');
-        const sunIcon = document.getElementById('sun-icon');
-        const moonIcon = document.getElementById('moon-icon');
-        const scratchpad = document.getElementById('scratchpad');
-        const connectionIndicator = document.getElementById('connection-indicator');
-        const connectionText = document.getElementById('connection-text');
+        if (!firebaseConfig) {
+            firebaseConfig = typeof __firebase_config !== 'undefined' 
+                ? JSON.parse(__firebase_config) 
+                : {
+                    apiKey: "",
+                    authDomain: "mock-auth-domain.firebaseapp.com",
+                    projectId: "mock-project-id",
+                    storageBucket: "mock-storage-bucket.appspot.com",
+                    messagingSenderId: "1234567890",
+                    appId: "1:12345:web:abcdef"
+                };
+        }
 
         // Setup Date Default Values
         const getLocalDateString = (offsetDays = 0) => {
@@ -517,117 +529,259 @@
         };
         const mockToday = getLocalDateString(0); 
 
-        document.getElementById('todo-date').value = mockToday;
-        document.getElementById('agenda-date').value = mockToday;
-        document.getElementById('export-start-date').value = mockToday;
-        document.getElementById('export-end-date').value = mockToday;
+        // RESILIENT STATE: Load from LocalStorage Cache immediately for instant rendering
+        let todos = JSON.parse(localStorage.getItem('prowork_todos')) || [
+            { id: '1', text: 'Menyiapkan materi review proyek mingguan', completed: false, category: 'Kerjaan', createdAt: getLocalDateString(0), timestamp: Date.now() },
+            { id: '2', text: 'Membeli buah segar dan cemilan sehat', completed: true, category: 'Pribadi', createdAt: getLocalDateString(1), timestamp: Date.now() - 86400000 },
+            { id: '3', text: 'Memperbaiki bug kritis di sistem login', completed: false, category: 'Mendesak', createdAt: getLocalDateString(0), timestamp: Date.now() + 100 }
+        ];
 
-        // Main Auth Initialization (Rule 3 Execution)
-        async function authenticateAndInit() {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (e) {
-                console.error("Auth Exception:", e);
-            }
-        }
+        let agenda = JSON.parse(localStorage.getItem('prowork_agenda')) || [
+            { id: '1', title: 'Meeting Evaluasi Proyek', time: '10:00', date: getLocalDateString(0), color: 'indigo', timestamp: Date.now() },
+            { id: '2', title: 'Istirahat & Makan Siang', time: '12:00', date: getLocalDateString(0), color: 'emerald', timestamp: Date.now() + 10 },
+            { id: '3', title: 'Sesi Desain 1-on-1', time: '15:30', date: getLocalDateString(0), color: 'amber', timestamp: Date.now() + 20 }
+        ];
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                isAuthCompleted = true;
-                connectionIndicator.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
-                connectionText.textContent = "Online (Sinkron Terkini)";
-                
-                // Initialize Listeners now that Auth is successful
-                initProfileListener();
-                initTodosListener();
-                initAgendaListener();
-                initScratchpadListener();
-            } else {
-                connectionIndicator.className = "w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse";
-                connectionText.textContent = "Offline (Mencoba Hubung)";
-            }
-        });
+        let profile = JSON.parse(localStorage.getItem('prowork_profile')) || {
+            photo: 'https://placehold.co/150x150/4f46e5/ffffff?text=User',
+            name: 'Contributor ProWork',
+            job: 'Profesional Staff',
+            unit: 'Kantor Pusat'
+        };
 
-        // 1. Profile Real-Time Listener (Rule 1 Compliant)
-        function initProfileListener() {
-            const profileDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'profile', 'main_profile');
-            onSnapshot(profileDocRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    profile = docSnap.data();
-                    updateProfileUI();
-                } else {
-                    // Create default if not exist yet
-                    setDoc(profileDocRef, profile);
-                }
-            }, (error) => {
-                console.error("Error fetching profile:", error);
-                showToast("Sinkronisasi profil bermasalah");
-            });
-        }
+        let scratchpadContent = localStorage.getItem('prowork_scratchpad') || '';
 
-        // 2. Todos Real-Time Listener (Rule 1 & Rule 2 Compliant)
-        function initTodosListener() {
-            const todosColRef = collection(db, 'artifacts', appId, 'public', 'data', 'todos');
-            // Fetch everything simply and sort in memory (Rule 2)
-            onSnapshot(todosColRef, (querySnapshot) => {
-                const fetchedTodos = [];
-                querySnapshot.forEach((doc) => {
-                    fetchedTodos.push({ id: doc.id, ...doc.data() });
-                });
-                todos = fetchedTodos;
-                renderTodos();
-            }, (error) => {
-                console.error("Error fetching todos:", error);
-                showToast("Sinkronisasi to-do terganggu");
-            });
-        }
+        // Resilient Engine Control Flags
+        let isUsingCloud = false; 
+        let isAuthCompleted = false;
+        let selectedCategory = 'Kerjaan';
+        let currentFilter = 'all';
+        let activeExportPeriod = 'today';
+        let isCustomDateActive = false;
 
-        // 3. Agenda Real-Time Listener
-        function initAgendaListener() {
-            const agendaColRef = collection(db, 'artifacts', appId, 'public', 'data', 'agenda');
-            onSnapshot(agendaColRef, (querySnapshot) => {
-                const fetchedAgenda = [];
-                querySnapshot.forEach((doc) => {
-                    fetchedAgenda.push({ id: doc.id, ...doc.data() });
-                });
-                agenda = fetchedAgenda;
-                renderAgenda();
-            }, (error) => {
-                console.error("Error fetching agenda:", error);
-                showToast("Sinkronisasi agenda terganggu");
-            });
-        }
+        // Theme & Header Elements
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        const scratchpad = document.getElementById('scratchpad');
+        const connectionIndicator = document.getElementById('connection-indicator');
+        const connectionText = document.getElementById('connection-text');
+        const connectionBadge = document.getElementById('connection-badge');
 
-        // 4. Scratchpad Real-Time Listener
-        function initScratchpadListener() {
-            const padDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'scratchpad', 'main_notes');
-            onSnapshot(padDocRef, (docSnap) => {
-                if (docSnap.exists() && document.activeElement !== scratchpad) {
-                    scratchpad.value = docSnap.data().content || '';
-                }
-            }, (error) => {
-                console.error("Error fetching scratchpad:", error);
-            });
-        }
-
-        // --- PROFILE LOGIC CONTROLLERS ---
+        // Profile Modal Elements
         const profileModal = document.getElementById('profile-modal');
         const profileModalCard = document.getElementById('profile-modal-card');
         const editProfileBtn = document.getElementById('edit-profile-btn');
         const closeProfileBtn = document.getElementById('close-profile-btn');
         const cancelProfileBtn = document.getElementById('cancel-profile-btn');
         const saveProfileBtn = document.getElementById('save-profile-btn');
-        
         const inputProfileFile = document.getElementById('input-profile-file');
         const modalProfilePreview = document.getElementById('modal-profile-preview');
         const inputProfileName = document.getElementById('input-profile-name');
         const inputProfileJob = document.getElementById('input-profile-job');
         const inputProfileUnit = document.getElementById('input-profile-unit');
 
+        // Cloud Settings Elements
+        const toggleCloudSettings = document.getElementById('toggle-cloud-settings');
+        const cloudSettingsChevron = document.getElementById('cloud-settings-chevron');
+        const cloudSettingsContent = document.getElementById('cloud-settings-content');
+        const cloudRoomIdInput = document.getElementById('cloud-room-id');
+        const cloudConfigInput = document.getElementById('cloud-firebase-config');
+        const clearCustomCloud = document.getElementById('clear-custom-cloud');
+
+        // To-Do Elements
+        const todoForm = document.getElementById('todo-form');
+        const todoInput = document.getElementById('todo-input');
+        const todoList = document.getElementById('todo-list');
+        const todoStats = document.getElementById('todo-stats');
+        const todoProgress = document.getElementById('todo-progress');
+        const todoDateInput = document.getElementById('todo-date');
+
+        // Agenda Elements
+        const agendaList = document.getElementById('agenda-list');
+        const agendaFormContainer = document.getElementById('agenda-form-container');
+        const addAgendaBtn = document.getElementById('add-agenda-btn');
+        const cancelAgendaBtn = document.getElementById('cancel-agenda-btn');
+        const saveAgendaBtn = document.getElementById('save-agenda-btn');
+        const agendaTitle = document.getElementById('agenda-title');
+        const agendaTime = document.getElementById('agenda-time');
+        const agendaDate = document.getElementById('agenda-date');
+        const agendaColor = document.getElementById('agenda-color');
+
+        // Export Elements
+        const openExportBtn = document.getElementById('open-export-btn');
+        const closeExportBtn = document.getElementById('close-export-btn');
+        const exportModal = document.getElementById('export-modal');
+        const exportModalCard = document.getElementById('export-modal-card');
+        const useCustomDateBtn = document.getElementById('use-custom-date');
+        const customDateInputs = document.getElementById('custom-date-inputs');
+        const periodBtns = document.querySelectorAll('.period-btn');
+
+        // Pre-fill Forms with dynamic values
+        document.getElementById('todo-date').value = mockToday;
+        document.getElementById('agenda-date').value = mockToday;
+        document.getElementById('export-start-date').value = mockToday;
+        document.getElementById('export-end-date').value = mockToday;
+
+        // Pre-render immediately with cached local data
+        updateProfileUI();
+        renderTodos();
+        renderAgenda();
+        scratchpad.value = scratchpadContent;
+
+        // Initialize Firebase
+        let app, db, auth;
+        let unsubscribeProfile, unsubscribeTodos, unsubscribeAgenda, unsubscribeScratchpad;
+
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            isUsingCloud = true;
+        } catch(e) {
+            console.warn("Firebase initialization failed. Operating in highly secure Local Mode.", e);
+            setLocalOnlyMode("Gagal Inisialisasi Cloud");
+        }
+
+        // Execute Auth Flow if Cloud API is valid
+        if (isUsingCloud) {
+            authenticateAndInit();
+        }
+
+        async function authenticateAndInit() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token && !customConfig) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (e) {
+                console.warn("Auth Exception - falling back to offline operation:", e);
+                setLocalOnlyMode("Sesi Auth Gagal");
+            }
+        }
+
+        if (isUsingCloud) {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    isAuthCompleted = true;
+                    setCloudOnlineMode();
+                    
+                    // Initialize cloud listeners
+                    initProfileListener();
+                    initTodosListener();
+                    initAgendaListener();
+                    initScratchpadListener();
+                } else {
+                    setLocalOnlyMode("Sesi Terputus");
+                }
+            });
+        }
+
+        // Fallback UI State controllers
+        function setLocalOnlyMode(reason) {
+            isUsingCloud = false;
+            isAuthCompleted = false;
+            connectionIndicator.className = "w-2.5 h-2.5 rounded-full bg-blue-500 animate-none shadow shadow-blue-500/50";
+            connectionText.textContent = "Penyimpanan Lokal (Aman)";
+            connectionBadge.title = `Data disimpan secara aman di browser lokal Anda. (Sebab: ${reason})`;
+            document.getElementById('scratchpad-sync-status').textContent = "Penyimpanan Lokal Aktif";
+        }
+
+        function setCloudOnlineMode() {
+            isUsingCloud = true;
+            connectionIndicator.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow shadow-emerald-500/50";
+            connectionText.textContent = "Online (Sinkron Cloud)";
+            connectionBadge.title = "Sinkronisasi Cloud berjalan lancar ke database real-time Anda!";
+            document.getElementById('scratchpad-sync-status').textContent = "Sinkronisasi Cloud Aktif";
+        }
+
+        // 1. Profile Listener with permission error auto-fallback
+        function initProfileListener() {
+            try {
+                const profileDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'profile', 'main_profile');
+                unsubscribeProfile = onSnapshot(profileDocRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        profile = docSnap.data();
+                        localStorage.setItem('prowork_profile', JSON.stringify(profile));
+                        updateProfileUI();
+                    } else {
+                        // Create cloud document from local copy
+                        setDoc(profileDocRef, profile).catch(e => console.warn("Initial cloud write blocked:", e));
+                    }
+                }, (error) => {
+                    console.warn("Firestore permissions blocked profile sync. Running locally:", error.message);
+                    setLocalOnlyMode("Permissions Terbatas");
+                });
+            } catch(e) {
+                setLocalOnlyMode("Koneksi Gagal");
+            }
+        }
+
+        // 2. Todos Listener with permission error auto-fallback
+        function initTodosListener() {
+            try {
+                const todosColRef = collection(db, 'artifacts', appId, 'public', 'data', 'todos');
+                unsubscribeTodos = onSnapshot(todosColRef, (querySnapshot) => {
+                    const fetchedTodos = [];
+                    querySnapshot.forEach((doc) => {
+                        fetchedTodos.push({ id: doc.id, ...doc.data() });
+                    });
+                    todos = fetchedTodos;
+                    localStorage.setItem('prowork_todos', JSON.stringify(todos));
+                    renderTodos();
+                }, (error) => {
+                    console.warn("Firestore permissions blocked todos sync. Running locally:", error.message);
+                    setLocalOnlyMode("Permissions Terbatas");
+                    renderTodos(); // keeps current local copy working
+                });
+            } catch(e) {
+                setLocalOnlyMode("Koneksi Gagal");
+            }
+        }
+
+        // 3. Agenda Listener with permission error auto-fallback
+        function initAgendaListener() {
+            try {
+                const agendaColRef = collection(db, 'artifacts', appId, 'public', 'data', 'agenda');
+                unsubscribeAgenda = onSnapshot(agendaColRef, (querySnapshot) => {
+                    const fetchedAgenda = [];
+                    querySnapshot.forEach((doc) => {
+                        fetchedAgenda.push({ id: doc.id, ...doc.data() });
+                    });
+                    agenda = fetchedAgenda;
+                    localStorage.setItem('prowork_agenda', JSON.stringify(agenda));
+                    renderAgenda();
+                }, (error) => {
+                    console.warn("Firestore permissions blocked agenda sync. Running locally:", error.message);
+                    setLocalOnlyMode("Permissions Terbatas");
+                    renderAgenda();
+                });
+            } catch(e) {
+                setLocalOnlyMode("Koneksi Gagal");
+            }
+        }
+
+        // 4. Scratchpad Listener with permission error auto-fallback
+        function initScratchpadListener() {
+            try {
+                const padDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'scratchpad', 'main_notes');
+                unsubscribeScratchpad = onSnapshot(padDocRef, (docSnap) => {
+                    if (docSnap.exists() && document.activeElement !== scratchpad) {
+                        scratchpad.value = docSnap.data().content || '';
+                        localStorage.setItem('prowork_scratchpad', scratchpad.value);
+                    }
+                }, (error) => {
+                    console.warn("Firestore permissions blocked notes sync. Running locally:", error.message);
+                    setLocalOnlyMode("Permissions Terbatas");
+                });
+            } catch(e) {
+                setLocalOnlyMode("Koneksi Gagal");
+            }
+        }
+
+
+        // --- PROFILE LOGIC CONTROLLERS ---
         let compressedBase64Photo = null;
 
         function updateProfileUI() {
@@ -638,12 +792,15 @@
         }
 
         editProfileBtn.addEventListener('click', () => {
-            // Fill current profile state into modal
             modalProfilePreview.src = profile.photo || 'https://placehold.co/150x150/4f46e5/ffffff?text=User';
             inputProfileName.value = profile.name || '';
             inputProfileJob.value = profile.job || '';
             inputProfileUnit.value = profile.unit || '';
             compressedBase64Photo = profile.photo || null;
+
+            // Load advanced cloud settings
+            cloudRoomIdInput.value = localStorage.getItem('prowork_custom_room') || '';
+            cloudConfigInput.value = localStorage.getItem('prowork_custom_firebase') || '';
 
             profileModal.classList.remove('pointer-events-none', 'opacity-0');
             profileModalCard.classList.remove('scale-95');
@@ -659,7 +816,28 @@
         closeProfileBtn.addEventListener('click', closeProfileModal);
         cancelProfileBtn.addEventListener('click', closeProfileModal);
 
-        // Image Reader & Smart Downscaling (Guarantees payload sits under ~30kb)
+        // Accordion for Cloud Settings
+        toggleCloudSettings.addEventListener('click', () => {
+            const isHidden = cloudSettingsContent.classList.contains('hidden');
+            if (isHidden) {
+                cloudSettingsContent.classList.remove('hidden');
+                cloudSettingsChevron.classList.add('rotate-180');
+            } else {
+                cloudSettingsContent.classList.add('hidden');
+                cloudSettingsChevron.classList.remove('rotate-180');
+            }
+        });
+
+        // Clear custom cloud config
+        clearCustomCloud.addEventListener('click', () => {
+            localStorage.removeItem('prowork_custom_firebase');
+            localStorage.removeItem('prowork_custom_room');
+            cloudRoomIdInput.value = '';
+            cloudConfigInput.value = '';
+            showToast("Konfigurasi cloud default dipulihkan!");
+        });
+
+        // Downscaling Profile Image for flawless performance and data safety
         inputProfileFile.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
@@ -668,20 +846,16 @@
             reader.onload = function(event) {
                 const img = new Image();
                 img.onload = function() {
-                    // Create an offscreen canvas to scale image to 200x200 pixel max
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
                     canvas.width = 200;
                     canvas.height = 200;
 
-                    // Crop square aspect ratio
                     const size = Math.min(img.width, img.height);
                     const sx = (img.width - size) / 2;
                     const sy = (img.height - size) / 2;
 
                     ctx.drawImage(img, sx, sy, size, size, 0, 0, 200, 200);
-
-                    // Convert to high-performance base64
                     compressedBase64Photo = canvas.toDataURL('image/jpeg', 0.85);
                     modalProfilePreview.src = compressedBase64Photo;
                 };
@@ -690,20 +864,40 @@
             reader.readAsDataURL(file);
         });
 
-        // Save Profile to Firestore
+        // Save User Profile changes
         saveProfileBtn.addEventListener('click', async () => {
-            if (!isAuthCompleted) {
-                showToast("Error: Sesi internet belum siap!");
-                return;
-            }
-
             const name = inputProfileName.value.trim();
             const job = inputProfileJob.value.trim();
             const unit = inputProfileUnit.value.trim();
 
             if (!name || !job || !unit) {
-                showToast("Semua kolom profil harus diisi!");
+                showToast("Semua kolom profil wajib diisi!");
                 return;
+            }
+
+            // Read Cloud inputs
+            const customRoom = cloudRoomIdInput.value.trim();
+            const customFbConfig = cloudConfigInput.value.trim();
+
+            let cloudNeedsReload = false;
+            if (customRoom !== (localStorage.getItem('prowork_custom_room') || '')) {
+                if (customRoom) localStorage.setItem('prowork_custom_room', customRoom);
+                else localStorage.removeItem('prowork_custom_room');
+                cloudNeedsReload = true;
+            }
+            if (customFbConfig !== (localStorage.getItem('prowork_custom_firebase') || '')) {
+                if (customFbConfig) {
+                    try {
+                        JSON.parse(customFbConfig); // check validity
+                        localStorage.setItem('prowork_custom_firebase', customFbConfig);
+                    } catch(e) {
+                        showToast("Format JSON Firebase salah!");
+                        return;
+                    }
+                } else {
+                    localStorage.removeItem('prowork_custom_firebase');
+                }
+                cloudNeedsReload = true;
             }
 
             const updatedProfile = {
@@ -713,26 +907,37 @@
                 unit: unit
             };
 
-            try {
-                const profileDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'profile', 'main_profile');
-                await setDoc(profileDocRef, updatedProfile);
-                showToast("Profil berhasil diperbarui!");
-                closeProfileModal();
-            } catch (err) {
-                console.error("Save profile error:", err);
-                showToast("Gagal menyimpan ke server");
+            // Write locally first
+            profile = updatedProfile;
+            localStorage.setItem('prowork_profile', JSON.stringify(profile));
+            updateProfileUI();
+
+            // Write to Cloud if active and configured
+            if (isUsingCloud && isAuthCompleted) {
+                try {
+                    const profileDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'profile', 'main_profile');
+                    await setDoc(profileDocRef, updatedProfile);
+                    showToast("Profil diperbarui di cloud!");
+                } catch (err) {
+                    console.warn("Could not save profile to cloud, running in local mode:", err);
+                    setLocalOnlyMode("Write Terblokir");
+                }
+            } else {
+                showToast("Profil disimpan lokal!");
+            }
+
+            closeProfileModal();
+
+            if (cloudNeedsReload) {
+                showToast("Memuat ulang koneksi database...");
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             }
         });
 
 
-        // --- TO-DO CONTROLLERS (Realtime Firestore Action) ---
-        const todoForm = document.getElementById('todo-form');
-        const todoInput = document.getElementById('todo-input');
-        const todoList = document.getElementById('todo-list');
-        const todoStats = document.getElementById('todo-stats');
-        const todoProgress = document.getElementById('todo-progress');
-        const todoDateInput = document.getElementById('todo-date');
-
+        // --- TO-DO LIST CONTROLLER ---
         function getCategoryStyle(cat) {
             switch(cat) {
                 case 'Kerjaan':
@@ -746,63 +951,86 @@
             }
         }
 
-        // Add Todo
+        // Add New Todo task
         todoForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const text = todoInput.value.trim();
             const dateVal = todoDateInput.value || mockToday;
             if (!text) return;
 
-            if (!isAuthCompleted) {
-                showToast("Sesi offline. Tidak dapat menambahkan.");
-                return;
-            }
+            const localId = "local_" + Date.now();
+            const newTodo = {
+                text: text,
+                completed: false,
+                category: selectedCategory,
+                createdAt: dateVal,
+                timestamp: Date.now()
+            };
 
-            try {
-                const todosColRef = collection(db, 'artifacts', appId, 'public', 'data', 'todos');
-                await addDoc(todosColRef, {
-                    text: text,
-                    completed: false,
-                    category: selectedCategory,
-                    createdAt: dateVal,
-                    timestamp: Date.now()
-                });
-                todoInput.value = '';
-                todoDateInput.value = mockToday;
-                showToast("Tugas baru berhasil disimpan!");
-            } catch (err) {
-                console.error("Error adding todo:", err);
-                showToast("Gagal menyimpan tugas");
+            // Write locally first
+            const withLocalId = { id: localId, ...newTodo };
+            todos.push(withLocalId);
+            localStorage.setItem('prowork_todos', JSON.stringify(todos));
+            renderTodos();
+
+            todoInput.value = '';
+            todoDateInput.value = mockToday;
+            showToast("Tugas berhasil disimpan!");
+
+            // Attempt Cloud Sync
+            if (isUsingCloud && isAuthCompleted) {
+                try {
+                    const todosColRef = collection(db, 'artifacts', appId, 'public', 'data', 'todos');
+                    await addDoc(todosColRef, newTodo);
+                    // cloud listener will auto-update local array on snapshot return
+                } catch (err) {
+                    console.warn("Could not push todo to cloud, running locally:", err);
+                    setLocalOnlyMode("Tugas Cloud Gagal");
+                }
             }
         });
 
-        // Toggle Todo Completeness
+        // Toggle Todo status
         window.toggleTodo = async (id, currentStatus) => {
-            if (!isAuthCompleted) return;
-            try {
-                const todoDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'todos', id);
-                await updateDoc(todoDocRef, {
-                    completed: !currentStatus
-                });
-                showToast("Status tugas diperbarui!");
-            } catch (err) {
-                console.error(err);
+            // Update local state instantly
+            todos = todos.map(t => t.id === id ? { ...t, completed: !currentStatus } : t);
+            localStorage.setItem('prowork_todos', JSON.stringify(todos));
+            renderTodos();
+            showToast("Status tugas diperbarui!");
+
+            // Attempt Cloud Sync
+            if (isUsingCloud && isAuthCompleted && !id.toString().startsWith('local_')) {
+                try {
+                    const todoDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'todos', id);
+                    await updateDoc(todoDocRef, { completed: !currentStatus });
+                } catch (err) {
+                    console.warn("Could not sync complete state, operating locally:", err);
+                    setLocalOnlyMode("Status Cloud Gagal");
+                }
             }
         };
 
-        // Delete Todo
+        // Delete Todo task
         window.deleteTodo = async (id) => {
-            if (!isAuthCompleted) return;
-            try {
-                const todoDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'todos', id);
-                await deleteDoc(todoDocRef);
-                showToast("Tugas telah terhapus");
-            } catch (err) {
-                console.error(err);
+            // Update local state instantly
+            todos = todos.filter(t => t.id !== id);
+            localStorage.setItem('prowork_todos', JSON.stringify(todos));
+            renderTodos();
+            showToast("Tugas telah terhapus!");
+
+            // Attempt Cloud Sync
+            if (isUsingCloud && isAuthCompleted && !id.toString().startsWith('local_')) {
+                try {
+                    const todoDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'todos', id);
+                    await deleteDoc(todoDocRef);
+                } catch (err) {
+                    console.warn("Could not sync delete, operating locally:", err);
+                    setLocalOnlyMode("Hapus Cloud Gagal");
+                }
             }
         };
 
-        // Render Local Copy of Todos
+        // Render To-Do items
         function renderTodos() {
             todoList.innerHTML = '';
             
@@ -822,8 +1050,8 @@
                     </div>
                 `;
             } else {
-                // Sort by memory timestamp / ID so newest is at the bottom or sorted sequentially
-                filteredTodos.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+                // Sort with newest on top
+                filteredTodos.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
                 
                 filteredTodos.forEach(todo => {
                     const todoEl = document.createElement('div');
@@ -833,7 +1061,6 @@
                     
                     todoEl.innerHTML = `
                         <div class="flex items-center space-x-3 flex-1 min-w-0">
-                            <!-- Custom Interactive Checkbox -->
                             <button onclick="toggleTodo('${todo.id}', ${todo.completed})" type="button" class="focus:outline-none flex-shrink-0 w-5 h-5 rounded-md border ${todo.completed ? 'bg-brand-500 border-brand-500 text-white' : 'border-slate-300 dark:border-slate-600 hover:border-brand-500'} flex items-center justify-center transition-colors">
                                 ${todo.completed ? '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>' : ''}
                             </button>
@@ -860,12 +1087,12 @@
             const completed = todos.filter(t => t.completed).length;
             todoStats.textContent = `${completed}/${total} Tugas`;
             
-            // Progress Update
+            // Progress Bar Update
             const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
             todoProgress.style.width = `${percent}%`;
         }
 
-        // Filter Functionality setup
+        // Filter operations
         const filterBtns = document.querySelectorAll('.filter-btn');
         filterBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -884,18 +1111,28 @@
             });
         });
 
-        // Clear Completed Todos
+        // Clear completed list
         document.getElementById('clear-completed').addEventListener('click', async () => {
             const completedTodos = todos.filter(t => t.completed);
             if (completedTodos.length === 0) return;
 
             showToast("Membersihkan...");
-            for (let t of completedTodos) {
-                try {
-                    const todoDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'todos', t.id);
-                    await deleteDoc(todoDocRef);
-                } catch (err) {
-                    console.error(err);
+
+            // Instantly clear locally
+            todos = todos.filter(t => !t.completed);
+            localStorage.setItem('prowork_todos', JSON.stringify(todos));
+            renderTodos();
+
+            if (isUsingCloud && isAuthCompleted) {
+                for (let t of completedTodos) {
+                    if (!t.id.toString().startsWith('local_')) {
+                        try {
+                            const todoDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'todos', t.id);
+                            await deleteDoc(todoDocRef);
+                        } catch (err) {
+                            console.warn("Could not sync clear completed:", err);
+                        }
+                    }
                 }
             }
             showToast("Tugas selesai dibersihkan!");
@@ -903,17 +1140,6 @@
 
 
         // --- AGENDA EVENT SYSTEM ---
-        const agendaList = document.getElementById('agenda-list');
-        const agendaFormContainer = document.getElementById('agenda-form-container');
-        const addAgendaBtn = document.getElementById('add-agenda-btn');
-        const cancelAgendaBtn = document.getElementById('cancel-agenda-btn');
-        const saveAgendaBtn = document.getElementById('save-agenda-btn');
-
-        const agendaTitle = document.getElementById('agenda-title');
-        const agendaTime = document.getElementById('agenda-time');
-        const agendaDate = document.getElementById('agenda-date');
-        const agendaColor = document.getElementById('agenda-color');
-
         function getColorClasses(color) {
             switch(color) {
                 case 'indigo':
@@ -956,6 +1182,7 @@
             clearAgendaForm();
         });
 
+        // Save Agenda event
         saveAgendaBtn.addEventListener('click', async () => {
             const title = agendaTitle.value.trim();
             const time = agendaTime.value;
@@ -967,34 +1194,52 @@
                 return;
             }
 
-            if (!isAuthCompleted) return;
+            const localId = "local_" + Date.now();
+            const newAgenda = {
+                title: title,
+                time: time,
+                date: dateVal,
+                color: color,
+                timestamp: Date.now()
+            };
 
-            try {
-                const agendaColRef = collection(db, 'artifacts', appId, 'public', 'data', 'agenda');
-                await addDoc(agendaColRef, {
-                    title: title,
-                    time: time,
-                    date: dateVal,
-                    color: color,
-                    timestamp: Date.now()
-                });
-                clearAgendaForm();
-                agendaFormContainer.classList.add('hidden');
-                showToast('Agenda berhasil disimpan!');
-            } catch (err) {
-                console.error(err);
-                showToast("Gagal menyimpan agenda");
+            // Write locally first
+            agenda.push({ id: localId, ...newAgenda });
+            localStorage.setItem('prowork_agenda', JSON.stringify(agenda));
+            renderAgenda();
+
+            clearAgendaForm();
+            agendaFormContainer.classList.add('hidden');
+            showToast('Agenda berhasil dibuat!');
+
+            // Sync with Cloud
+            if (isUsingCloud && isAuthCompleted) {
+                try {
+                    const agendaColRef = collection(db, 'artifacts', appId, 'public', 'data', 'agenda');
+                    await addDoc(agendaColRef, newAgenda);
+                } catch (err) {
+                    console.warn("Could not sync new agenda event:", err);
+                    setLocalOnlyMode("Agenda Cloud Gagal");
+                }
             }
         });
 
         window.deleteAgenda = async (id) => {
-            if (!isAuthCompleted) return;
-            try {
-                const agendaDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'agenda', id);
-                await deleteDoc(agendaDocRef);
-                showToast('Agenda dihapus');
-            } catch (err) {
-                console.error(err);
+            // Write locally first
+            agenda = agenda.filter(item => item.id !== id);
+            localStorage.setItem('prowork_agenda', JSON.stringify(agenda));
+            renderAgenda();
+            showToast('Agenda dihapus!');
+
+            // Attempt Cloud Sync
+            if (isUsingCloud && isAuthCompleted && !id.toString().startsWith('local_')) {
+                try {
+                    const agendaDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'agenda', id);
+                    await deleteDoc(agendaDocRef);
+                } catch (err) {
+                    console.warn("Could not sync agenda deletion:", err);
+                    setLocalOnlyMode("Hapus Agenda Cloud Gagal");
+                }
             }
         };
 
@@ -1008,7 +1253,6 @@
         function renderAgenda() {
             agendaList.innerHTML = '';
             
-            // Sort by Date, then by Time in memory (Rule 2)
             agenda.sort((a, b) => {
                 const dateCompare = a.date.localeCompare(b.date);
                 if (dateCompare !== 0) return dateCompare;
@@ -1058,22 +1302,28 @@
             const content = e.target.value;
             document.getElementById('scratchpad-sync-status').textContent = "Menyimpan draf...";
             
+            // Instantly save to local memory
+            localStorage.setItem('prowork_scratchpad', content);
+
             clearTimeout(padDebounceTimeout);
             padDebounceTimeout = setTimeout(async () => {
-                if (!isAuthCompleted) return;
-                try {
-                    const padDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'scratchpad', 'main_notes');
-                    await setDoc(padDocRef, { content: content }, { merge: true });
-                    document.getElementById('scratchpad-sync-status').textContent = "Sinkronisasi Cloud Aktif";
-                } catch (err) {
-                    console.error("Scratchpad sync failed:", err);
-                    document.getElementById('scratchpad-sync-status').textContent = "Gagal sinkron";
+                if (isUsingCloud && isAuthCompleted) {
+                    try {
+                        const padDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'scratchpad', 'main_notes');
+                        await setDoc(padDocRef, { content: content }, { merge: true });
+                        document.getElementById('scratchpad-sync-status').textContent = "Sinkronisasi Cloud Aktif";
+                    } catch (err) {
+                        console.warn("Scratchpad sync failed:", err);
+                        document.getElementById('scratchpad-sync-status').textContent = "Penyimpanan Lokal Aktif";
+                    }
+                } else {
+                    document.getElementById('scratchpad-sync-status').textContent = "Penyimpanan Lokal Aktif";
                 }
             }, 800); // 800ms debounce
         });
 
 
-        // Category Selector UI Highlight
+        // Category Selector UI Highlights
         const catButtons = document.querySelectorAll('.cat-btn');
         catButtons.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -1087,7 +1337,7 @@
             });
         });
 
-        // Theme and Clock Handler
+        // Theme controllers
         function initTheme() {
             if (localStorage.getItem('theme') === 'light') {
                 document.documentElement.classList.remove('dark');
@@ -1116,7 +1366,7 @@
             }
         });
 
-        // Toast System
+        // Toast Notification system
         let toastTimeout;
         function showToast(message) {
             const toast = document.getElementById('toast');
@@ -1134,7 +1384,7 @@
             }, 2500);
         }
 
-        // Live Clock Tick
+        // Live Clock dynamic ticks
         function startLiveClock() {
             const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
             const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
@@ -1182,7 +1432,6 @@
                 }
             }
 
-            // Filter Arrays (Rule 2 Compliant in memory execution)
             const filteredTodos = todos.filter(t => {
                 const todoDate = new Date(t.createdAt);
                 return todoDate >= startDate && todoDate <= endDate;
@@ -1201,11 +1450,6 @@
             };
         }
 
-        const openExportBtn = document.getElementById('open-export-btn');
-        const closeExportBtn = document.getElementById('close-export-btn');
-        const exportModal = document.getElementById('export-modal');
-        const exportModalCard = document.getElementById('export-modal-card');
-
         openExportBtn.addEventListener('click', () => {
             exportModal.classList.remove('pointer-events-none', 'opacity-0');
             exportModalCard.classList.remove('scale-95');
@@ -1223,7 +1467,6 @@
             if (e.target === exportModal) closeModal();
         });
 
-        const periodBtns = document.querySelectorAll('.period-btn');
         periodBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 periodBtns.forEach(b => {
@@ -1243,9 +1486,6 @@
                 }
             });
         });
-
-        const useCustomDateBtn = document.getElementById('use-custom-date');
-        const customDateInputs = document.getElementById('custom-date-inputs');
 
         useCustomDateBtn.addEventListener('click', () => {
             toggleCustomDatePicker(!isCustomDateActive);
@@ -1272,6 +1512,7 @@
                 todayBtn.click();
             }
         }
+
 
         // --- EXCEL GENERATOR ---
         document.getElementById('export-excel-btn').addEventListener('click', () => {
@@ -1313,6 +1554,7 @@
             showToast('Laporan Excel berhasil diunduh!');
             closeModal();
         });
+
 
         // --- PDF GENERATOR ---
         document.getElementById('export-pdf-btn').addEventListener('click', () => {
@@ -1385,7 +1627,7 @@
 
                     <!-- Meta details grid with Profile -->
                     <div style="display: grid; grid-template-columns: 80px 1fr; gap: 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; margin-bottom: 25px; align-items: center;">
-                        <img src="${profile.photo}" style="width: 70px; height: 70px; border-radius: 50%; object-cover: fit; border: 2px solid #6366f1;">
+                        <img src="${profile.photo}" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #6366f1;">
                         <div>
                             <h2 style="font-size: 13px; font-weight: 700; color: #0f172a; margin: 0 0 4px 0;">${profile.name}</h2>
                             <p style="font-size: 11px; color: #4f46e5; font-weight: 600; margin: 0 0 6px 0;">${profile.job} - ${profile.unit}</p>
@@ -1459,7 +1701,7 @@
                     <!-- Footer signature/notes -->
                     <div style="margin-top: 50px; border-top: 1px dashed #cbd5e1; padding-top: 15px; text-align: center; font-size: 10px; color: #94a3b8;">
                         <p style="margin: 0;">Laporan ini dicetak secara otomatis melalui portal dasbor real-time ProWork.</p>
-                        <p style="margin: 3px 0 0 0;">Semua data telah disinkronkan secara real-time dari cloud server.</p>
+                        <p style="margin: 3px 0 0 0;">Semua data telah disinkronkan secara real-time ke penyimpanan terverifikasi.</p>
                     </div>
                 </div>
             `;
@@ -1530,7 +1772,6 @@
         window.onload = function() {
             initTheme();
             startLiveClock();
-            authenticateAndInit();
         };
     </script>
 </body>
