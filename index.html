@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProWork - Dashboard Produktivitas Real-Time Premium</title>
+    <title>Agenda Kerja - Dashboard Produktivitas Real-Time Premium</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -494,7 +494,10 @@
 
         const appId = customRoomId || (typeof __app_id !== 'undefined' ? __app_id : 'prowork-prod-app');
         
-        let firebaseConfig;
+        // Deteksi apakah sedang berjalan di dalam platform Canvas atau hosting luar (seperti GitHub Pages)
+        const isInsideCanvas = typeof __firebase_config !== 'undefined';
+        
+        let firebaseConfig = null;
         if (customConfig) {
             try {
                 firebaseConfig = JSON.parse(customConfig);
@@ -503,17 +506,12 @@
             }
         }
 
-        if (!firebaseConfig) {
-            firebaseConfig = typeof __firebase_config !== 'undefined' 
-                ? JSON.parse(__firebase_config) 
-                : {
-                    apiKey: "",
-                    authDomain: "mock-auth-domain.firebaseapp.com",
-                    projectId: "mock-project-id",
-                    storageBucket: "mock-storage-bucket.appspot.com",
-                    messagingSenderId: "1234567890",
-                    appId: "1:12345:web:abcdef"
-                };
+        if (!firebaseConfig && isInsideCanvas) {
+            try {
+                firebaseConfig = JSON.parse(__firebase_config);
+            } catch(e) {
+                console.error("Canvas Config Error:", e);
+            }
         }
 
         // Setup Date Default Values
@@ -633,18 +631,23 @@
         let app, db, auth;
         let unsubscribeProfile, unsubscribeTodos, unsubscribeAgenda, unsubscribeScratchpad;
 
-        try {
-            app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
-            isUsingCloud = true;
-        } catch(e) {
-            console.warn("Firebase initialization failed. Operating in highly secure Local Mode.", e);
-            setLocalOnlyMode("Gagal Inisialisasi Cloud");
+        if (firebaseConfig) {
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                isUsingCloud = true;
+            } catch(e) {
+                console.warn("Firebase initialization failed. Operating in highly secure Local Mode.", e);
+                setLocalOnlyMode("Gagal Inisialisasi Cloud");
+            }
+        } else {
+            // Bypass koneksi mandiri jika tidak ada credential di GitHub Pages
+            setLocalOnlyMode("GitHub Pages / Offline Mode (Aktif)");
         }
 
         // Execute Auth Flow if Cloud API is valid
-        if (isUsingCloud) {
+        if (isUsingCloud && auth) {
             authenticateAndInit();
         }
 
@@ -661,7 +664,7 @@
             }
         }
 
-        if (isUsingCloud) {
+        if (isUsingCloud && auth) {
             onAuthStateChanged(auth, (user) => {
                 if (user) {
                     isAuthCompleted = true;
