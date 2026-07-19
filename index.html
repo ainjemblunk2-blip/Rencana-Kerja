@@ -552,8 +552,8 @@
                     </div>
                 `;
             } else {
-                // Sort to show newest first
-                filteredTodos.sort((a, b) => b.id - a.id);
+                // Sort to show oldest first (first inputted stays on top, subsequent inputs go below)
+                filteredTodos.sort((a, b) => a.id - b.id);
                 
                 filteredTodos.forEach(todo => {
                     const todoEl = document.createElement('div');
